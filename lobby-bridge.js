@@ -17,7 +17,7 @@
     document.body.classList.add('originalLobbyOpen');
   }
   render = function(route = 'HOME') {
-    if (route === 'HOME') return showLobby();
+    if (route === 'HOME' || route === 'PROMO') return showLobby();
     document.body.classList.remove('originalLobbyOpen');
     featureRender(route);
     window.scrollTo(0, 0);
@@ -25,7 +25,7 @@
   window.addEventListener('message', event => {
     if(event.origin !== location.origin || event.source !== lobby.contentWindow || event.data?.type !== 'dd-open-feature') return;
     const route = event.data.route;
-    if(!['SHOP','EARN','GULLAK','DEPOSIT_WHEEL'].includes(route)) return;
+    if(!['SHOP','EARN','GULLAK','DEPOSIT_WHEEL','RANKING','SUPPORT'].includes(route)) return;
     document.body.classList.remove('originalLobbyOpen');
     if(route === 'SHOP') openShop();
     else if(route === 'DEPOSIT_WHEEL') openDepositWheel();
