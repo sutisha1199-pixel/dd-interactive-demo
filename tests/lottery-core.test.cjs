@@ -1,0 +1,10 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const C=require('../src/lottery-core.js');
+const activate=s=>C.deposit(s,50,'UPI');
+const ready=()=>{const s=C.create({participants:3});activate(s);C.bet(s,6000);C.claimTickets(s,'bet');return s;};
+const seal=(s)=>{const d=C.current(s).date;C.advance(s,C.settlementEnd(d,s.config));return d;};
+test('activation does not backfill pre-activation activity',()=>{const s=C.create();C.bet(s,1200);C.deposit(s,1000);assert.equal(C.current(s).validBet,0);});
+test('ticket tiers do not stack and manual claim is capped',()=>{const s=ready();C.deposit(s,1000);assert.equal(C.claimTickets(s,'deposit'),4);assert.equal(C.current(s).tickets.length,14);});
+test('same ticket cannot win twice while a user may win multiple tickets',()=>{const s=C.create({participants:1});activate(s);C.bet(s,6000);C.claimTickets(s,'bet');const d=seal(s);const r=C.draw(s,d,1);assert.equal(r.my.count,10);assert.equal(new Set(r.my.wins.map(w=>w.ticket)).size,10);});
+test('draw is idempotent and claim credits once',()=>{const s=ready(),d=seal(s);const first=C.draw(s,d,8);assert.deepEqual(C.draw(s,d,99),first);C.advance(s,C.settlementEnd(d,s.config));C.publish(s,d);const amount=C.claimPrize(s,d);assert.equal(C.claimPrize(s,d),amount);assert.equal(s.walletEntries.length,1);});
