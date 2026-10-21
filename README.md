@@ -1,6 +1,6 @@
 # Gogo interactive demo
 
-Jackpot Lotto：直接打开 [lottery.html](lottery.html)，或从大厅 Promo → Jackpot Lotto 进入。支持手动领券、跨日结算、加权抽奖、结果榜单、手动领奖、后台配置和开奖审计。详细规则见 [玩法与开奖说明](docs/Jackpot-Lotto-玩法与开奖说明.md)。所有支付、投注、中奖、余额均为本地模拟数据。
+Jackpot Lotto：直接打开 [lottery.html](lottery.html)，或从大厅 Promo → Jackpot Lotto 进入。印度版使用 English (India)、INR 印度数字分组和 IST（UTC+05:30）。支持手动领券、跨日结算、按券无放回抽奖、结果榜单、手动领奖、后台配置和开奖审计。详细规则见 [玩法与开奖说明](docs/Jackpot-Lotto-玩法与开奖说明.md)，研发拆解见 [研发需求文档](docs/Jackpot-Lotto-研发需求文档.md)。所有支付、投注、中奖、余额均为本地模拟数据。
 直接打开 index.html 即可运行，无需安装依赖。页面美术素材裁剪自提供的参考图。
 
 支持：首页分类、游戏试玩、体育竞猜演示、充值、提现、提现审核、手机号绑定、银行卡、活动领奖、兑换码 DEMO100、每日转盘、资产记录、站内信与客服。数据保存于浏览器 localStorage，全部为模拟数据，不接入真实支付或投注。
