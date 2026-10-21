@@ -25,7 +25,8 @@
   window.addEventListener('message', event => {
     if(event.origin !== location.origin || event.source !== lobby.contentWindow || event.data?.type !== 'dd-open-feature') return;
     const route = event.data.route;
-    if(!['SHOP','EARN','GULLAK','DEPOSIT_WHEEL','RANKING','SUPPORT'].includes(route)) return;
+    if(!['SHOP','EARN','GULLAK','DEPOSIT_WHEEL','RANKING','SUPPORT','LOTTERY'].includes(route)) return;
+    if(route === 'LOTTERY'){lobby.src='lobby.html?view=lottery';document.body.classList.add('originalLobbyOpen');return;}
     document.body.classList.remove('originalLobbyOpen');
     if(route === 'SHOP') openShop();
     else if(route === 'DEPOSIT_WHEEL') openDepositWheel();
