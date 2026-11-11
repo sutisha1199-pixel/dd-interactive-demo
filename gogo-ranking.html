@@ -718,39 +718,37 @@ GogoRanking.init();
 
 
 </script>
+
+
 <style id="ranking-sticky-update">
-.rk-race-page .rk-fixed-podium{flex-shrink:0;background:#111723}
 .rk-race-page .rk-view{overflow-anchor:none;touch-action:pan-y}
-.rk-race-page .ranking-table-head{z-index:3;box-shadow:0 1px 0 #ffffff1a,0 4px 9px #0003}
+.rk-race-page .ranking-table-head{position:static;box-shadow:none}
 .rk-ranking-summary{flex-shrink:0;background:#285b44;position:relative}
 .rk-ranking-summary .ranking-period{height:42px}
-.rk-race-page.is-compact .rk-ranking-summary{height:78px}
-.rk-race-page.is-compact .ranking-period{position:absolute;inset:4px auto 4px 0;width:55px;height:auto;display:flex;flex-direction:column;padding:0 5px;z-index:2}
-.rk-race-page.is-compact .ranking-period button{font-size:10px;min-height:22px;padding:0;border:0}
-.rk-race-page.is-compact .ranking-period button.active:after{left:5px;right:5px;bottom:1px}
-.rk-race-page.is-compact .ranking-pool{height:78px;padding:5px 76px 5px 55px}
-.rk-race-page.is-compact .rk-pool-copy{width:100%;max-width:250px;text-align:center}
-.rk-race-page.is-compact .rk-pool-copy h1{font-size:17px;line-height:19px;margin:0 0 3px}
-.rk-race-page.is-compact .rk-pool-copy>strong{font-size:28px;line-height:32px;letter-spacing:-.5px}
-.rk-race-page.is-compact .ranking-countdown{width:54px;height:54px;top:12px;right:12px;border-width:3px;gap:3px}
-.rk-race-page.is-compact .ranking-countdown span,.rk-race-page.is-compact .ranking-countdown b{font-size:9px}
+.rk-race-page.is-compact .rk-ranking-summary{height:40px;border-top:1px solid #9bb8a4;border-bottom:1px solid #ffffff1a}
+.rk-race-page.is-compact .ranking-period{position:absolute;inset:0 auto 0 0;width:52px;height:39px;display:flex;align-items:center;padding:0 5px;z-index:2}
+.rk-race-page.is-compact .ranking-period button{font-size:13px;padding:0;border:0}
+.rk-race-page.is-compact .ranking-period button:not(.active){display:none}
+.rk-race-page.is-compact .ranking-period button.active:after{left:0;right:0;bottom:-2px;height:1px}
+.rk-race-page.is-compact .ranking-pool{height:39px;padding:3px 130px 3px 52px}
+.rk-race-page.is-compact .rk-pool-copy{width:100%;max-width:215px;text-align:center}
+.rk-race-page.is-compact .rk-pool-copy h1{display:none}
+.rk-race-page.is-compact .rk-pool-copy>strong{font-size:27px;line-height:29px;letter-spacing:-.5px}
+.rk-race-page.is-compact .ranking-countdown{width:118px;height:39px;top:0;right:6px;border:0;border-radius:0;background:none;flex-direction:row;gap:5px}
+.rk-race-page.is-compact .ranking-countdown span,.rk-race-page.is-compact .ranking-countdown b{font-size:10px;white-space:nowrap}
 .rk-race-page.is-compact .ranking-pool>p,.rk-race-page.is-compact .rk-pool-art{display:none}
 .rk-race-page.is-compact .ranking-tabs{height:44px;box-shadow:0 2px 5px #0004;z-index:2}
-.rk-race-page.is-compact .ranking-podium{padding:6px 8px 8px;gap:8px}
-.rk-race-page.is-compact .ranking-place{padding:4px 3px 7px;gap:5px}
-.rk-race-page.is-compact .rk-medal{height:27px;font-size:24px}
 .rk-ranking-pagination{min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;color:#a8bad2;font-size:11px}
 .rk-ranking-pagination button{border:1px solid #64758c;border-radius:5px;background:#243247;color:#fff;padding:8px 22px;font:inherit;min-height:36px}
 .rk-ranking-pagination button:focus-visible{outline:2px solid #ffed00;outline-offset:3px}
 .rk-rank-movement{display:inline-block;width:8px;margin-right:2px;font-style:normal!important;font-size:11px!important;color:#9daabd}
 .rk-rank-movement.is-up{color:#24d78a}.rk-rank-movement.is-down{color:#ff5d59}
 @media(max-width:350px){
- .rk-race-page.is-compact .ranking-pool{padding-left:49px;padding-right:67px}
+ .rk-race-page.is-compact .ranking-pool{padding-left:49px;padding-right:109px}
  .rk-race-page.is-compact .ranking-period{width:49px}
- .rk-race-page.is-compact .rk-pool-copy>strong{font-size:23px}
- .rk-race-page.is-compact .ranking-countdown{right:7px;width:51px;height:51px}
- .rk-race-page.is-compact .ranking-place>b{font-size:10px}
- .rk-race-page.is-compact .ranking-place>small{font-size:8px}
+ .rk-race-page.is-compact .rk-pool-copy>strong{font-size:22px}
+ .rk-race-page.is-compact .ranking-countdown{right:4px;width:101px;gap:4px}
+ .rk-race-page.is-compact .ranking-countdown span,.rk-race-page.is-compact .ranking-countdown b{font-size:9px}
 }
 
 </style>
@@ -794,8 +792,7 @@ GogoRanking.init();
     const summary=document.createElement('div');summary.className='rk-ranking-summary';
     const periods=root.querySelector('.ranking-period'),pool=root.querySelector('.ranking-pool');
     periods.before(summary);summary.append(periods,pool);
-    const view=root.querySelector('.rk-view'),podium=root.querySelector('.ranking-podium');
-    podium.classList.add('rk-fixed-podium');view.before(podium);
+    const view=root.querySelector('.rk-view');
     const table=view.querySelector('.ranking-table'),head=table.firstElementChild;
     table.setAttribute('aria-rowcount',String(limit-2));
     table.replaceChildren(head);
