@@ -718,5 +718,110 @@ GogoRanking.init();
 
 
 </script>
+<style id="ranking-sticky-update">
+.rk-race-page .rk-fixed-podium{flex-shrink:0;background:#111723}
+.rk-race-page .rk-view{overflow-anchor:none;touch-action:pan-y}
+.rk-race-page .ranking-table-head{z-index:3;box-shadow:0 1px 0 #ffffff1a,0 4px 9px #0003}
+.rk-ranking-summary{flex-shrink:0;background:#285b44;position:relative}
+.rk-ranking-summary .ranking-period{height:42px}
+.rk-race-page.is-compact .rk-ranking-summary{height:78px}
+.rk-race-page.is-compact .ranking-period{position:absolute;inset:4px auto 4px 0;width:55px;height:auto;display:flex;flex-direction:column;padding:0 5px;z-index:2}
+.rk-race-page.is-compact .ranking-period button{font-size:10px;min-height:22px;padding:0;border:0}
+.rk-race-page.is-compact .ranking-period button.active:after{left:5px;right:5px;bottom:1px}
+.rk-race-page.is-compact .ranking-pool{height:78px;padding:5px 76px 5px 55px}
+.rk-race-page.is-compact .rk-pool-copy{width:100%;max-width:250px;text-align:center}
+.rk-race-page.is-compact .rk-pool-copy h1{font-size:17px;line-height:19px;margin:0 0 3px}
+.rk-race-page.is-compact .rk-pool-copy>strong{font-size:28px;line-height:32px;letter-spacing:-.5px}
+.rk-race-page.is-compact .ranking-countdown{width:54px;height:54px;top:12px;right:12px;border-width:3px;gap:3px}
+.rk-race-page.is-compact .ranking-countdown span,.rk-race-page.is-compact .ranking-countdown b{font-size:9px}
+.rk-race-page.is-compact .ranking-pool>p,.rk-race-page.is-compact .rk-pool-art{display:none}
+.rk-race-page.is-compact .ranking-tabs{height:44px;box-shadow:0 2px 5px #0004;z-index:2}
+.rk-race-page.is-compact .ranking-podium{padding:6px 8px 8px;gap:8px}
+.rk-race-page.is-compact .ranking-place{padding:4px 3px 7px;gap:5px}
+.rk-race-page.is-compact .rk-medal{height:27px;font-size:24px}
+.rk-ranking-pagination{min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;color:#a8bad2;font-size:11px}
+.rk-ranking-pagination button{border:1px solid #64758c;border-radius:5px;background:#243247;color:#fff;padding:8px 22px;font:inherit;min-height:36px}
+.rk-ranking-pagination button:focus-visible{outline:2px solid #ffed00;outline-offset:3px}
+.rk-rank-movement{display:inline-block;width:8px;margin-right:2px;font-style:normal!important;font-size:11px!important;color:#9daabd}
+.rk-rank-movement.is-up{color:#24d78a}.rk-rank-movement.is-down{color:#ff5d59}
+@media(max-width:350px){
+ .rk-race-page.is-compact .ranking-pool{padding-left:49px;padding-right:67px}
+ .rk-race-page.is-compact .ranking-period{width:49px}
+ .rk-race-page.is-compact .rk-pool-copy>strong{font-size:23px}
+ .rk-race-page.is-compact .ranking-countdown{right:7px;width:51px;height:51px}
+ .rk-race-page.is-compact .ranking-place>b{font-size:10px}
+ .rk-race-page.is-compact .ranking-place>small{font-size:8px}
+}
+
+</style>
+<script id="ranking-sticky-update">
+(()=>{
+  const limit=500,batch=15;
+  const originalPage=GogoRanking.page,originalHandle=GogoRanking.handle,originalOpen=GogoRanking.open;
+  const format=(value,digits=0)=>'₹'+Number(value).toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+  const existing=[
+    ['User246039',11744000,180000],['User342158',10401545,150000],
+    ['ManiShri',9600723.35,150000],['User946281',2377330,75000],
+    ['UP 22 RAMPUR',2350600.79,60000],['User238877',2001000,45000],
+    ['Lucifer',1827428.38,30000],['Jayesh',1766510,24000]
+  ];
+  let loaded=batch,compact=false;
+  function row(rank){
+    const [name,wager,prize]=existing[rank-4]||[
+      'User'+String(600000+rank*137),
+      Math.round(1766510*Math.pow(11/rank,1.35)*100)/100,
+      Math.max(100,Math.floor(24000*Math.pow(11/rank,1.2)/10)*10)
+    ];
+    const movement=(rank-4)%3;
+    return `<div class="ranking-row" role="row" aria-rowindex="${rank-1}" data-rank="${rank}"><span role="cell"><i class="rk-rank-movement ${movement===0?'is-up':movement===2?'is-down':''}" aria-label="${movement===0?'Moved up':movement===2?'Moved down':'Unchanged'}">${movement===0?'↑':movement===2?'↓':'–'}</i>${rank}<small>${rank%100>=11&&rank%100<=13?'th':['th','st','nd','rd'][rank%10]||'th'}</small></span><b role="cell">${name}</b><span role="cell">${format(wager,2)}</span><strong role="cell">${format(prize)}</strong></div>`;
+  }
+  function pagination(){return `<span role="status" aria-live="polite">${loaded===limit?'All 500 players loaded':`Showing ${loaded} of 500 players`}</span>${loaded<limit?'<button type="button" data-action="ranking:load-more">Load more</button>':''}`;}
+  function loadMore(){
+    const table=document.querySelector('.rk-race-page .ranking-table');
+    if(!table||loaded>=limit)return;
+    const next=Math.min(loaded+batch,limit);
+    table.insertAdjacentHTML('beforeend',Array.from({length:next-loaded},(_,index)=>row(loaded+index+1)).join(''));
+    loaded=next;
+    document.querySelector('.rk-ranking-pagination').innerHTML=pagination();
+  }
+  function reset(){loaded=batch;compact=false;}
+  GogoRanking.page=()=>{
+    const template=document.createElement('template');
+    template.innerHTML=originalPage();
+    const root=template.content.querySelector('.rk-race-page');
+    if(!root)return template.innerHTML;
+    root.classList.toggle('is-compact',compact);
+    const summary=document.createElement('div');summary.className='rk-ranking-summary';
+    const periods=root.querySelector('.ranking-period'),pool=root.querySelector('.ranking-pool');
+    periods.before(summary);summary.append(periods,pool);
+    const view=root.querySelector('.rk-view'),podium=root.querySelector('.ranking-podium');
+    podium.classList.add('rk-fixed-podium');view.before(podium);
+    const table=view.querySelector('.ranking-table'),head=table.firstElementChild;
+    table.setAttribute('aria-rowcount',String(limit-2));
+    table.replaceChildren(head);
+    table.insertAdjacentHTML('beforeend',Array.from({length:loaded-3},(_,index)=>row(index+4)).join(''));
+    const end=document.createElement('div');end.className='rk-ranking-pagination';end.innerHTML=pagination();
+    view.append(end);
+    return template.innerHTML;
+  };
+  GogoRanking.handle=action=>{
+    if(action==='ranking:load-more'){loadMore();return;}
+    if(action.startsWith('ranking:period:')||action.startsWith('ranking:tab:'))reset();
+    originalHandle(action);
+  };
+  GogoRanking.open=()=>{reset();originalOpen();};
+  document.addEventListener('scroll',event=>{
+    const view=event.target;
+    if(!(view instanceof Element)||!view.matches('.rk-race-page .rk-view'))return;
+    const root=view.closest('.rk-race-page');
+    if(view.scrollTop>24)compact=true;
+    else if(view.scrollTop<=0)compact=false;
+    root.classList.toggle('is-compact',compact);
+    if(view.scrollTop>0&&view.scrollHeight-view.scrollTop-view.clientHeight<100)loadMore();
+  },{capture:true,passive:true});
+  if(state.page==='ranking')render();
+})();
+
+</script>
 </body>
 </html>
