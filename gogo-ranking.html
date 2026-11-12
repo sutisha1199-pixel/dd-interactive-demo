@@ -720,11 +720,25 @@ GogoRanking.init();
 </script>
 
 
+
+
+
+
+
+
+
+
+
+
 <style id="ranking-sticky-update">
 .rk-race-page .rk-view{overflow-anchor:none;touch-action:pan-y}
 .rk-race-page .ranking-table-head{position:static;box-shadow:none}
 .rk-ranking-summary{flex-shrink:0;background:#285b44;position:relative}
 .rk-ranking-summary .ranking-period{height:42px}
+.ranking-page:not(.is-compact) .ranking-period{gap:14px;align-items:center;padding:5px 16px;border-bottom:1px solid #88aa9366}
+.ranking-page:not(.is-compact) .ranking-period button{height:30px;padding:0 10px;border:1px solid #b7cbd5;border-radius:3px;background:#f4f8ff;color:#477bdd;font-size:13px;font-weight:700}
+.ranking-page:not(.is-compact) .ranking-period button.active{background:#004a2a;border-color:#004a2a;color:#fff;box-shadow:inset 0 0 0 1px #ffffff0a}
+.ranking-page:not(.is-compact) .ranking-period button.active:after{display:none}
 .rk-race-page.is-compact .rk-ranking-summary{height:40px;border-top:1px solid #9bb8a4;border-bottom:1px solid #ffffff1a}
 .rk-race-page.is-compact .ranking-period{position:absolute;inset:0 auto 0 0;width:52px;height:39px;display:flex;align-items:center;padding:0 5px;z-index:2}
 .rk-race-page.is-compact .ranking-period button{font-size:13px;padding:0;border:0}
@@ -817,6 +831,76 @@ GogoRanking.init();
     if(view.scrollTop>0&&view.scrollHeight-view.scrollTop-view.clientHeight<100)loadMore();
   },{capture:true,passive:true});
   if(state.page==='ranking')render();
+})();
+
+</script>
+<style id="ranking-game-update">
+body.ranking-game-mode{background:#10151f}
+.rg-page{min-height:100dvh;background:#10151f;color:#edf4ff;font-family:Arial,Helvetica,sans-serif}
+.rg-page .rk-brand{display:flex}.rg-page .rk-login{margin-left:auto;border:0;border-radius:4px;background:#ff6c15;color:#fff;font-size:11px;padding:9px 12px;font-weight:700}
+.rg-top{height:43px;display:flex;align-items:center;gap:8px;background:#075a37;padding:0 12px}.rg-top button{border:0;background:none;color:#e9fff1;font-size:29px;width:30px}.rg-top strong{font-size:14px}
+.rg-stage{position:relative;padding:16px 10px 12px;background:linear-gradient(#21355e,#0b1019 75%);isolation:isolate}
+.rg-board{display:block;width:100%;height:auto;aspect-ratio:390/340}.rg-pegs{fill:#e5f2ff}.rg-ball{fill:#ffdc45;filter:drop-shadow(0 0 5px #ffbd54)}
+.rg-ball.is-dropping{animation:rg-drop .7s ease-in forwards}.rg-slots{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;padding:0 5px}.rg-slots span{background:#6555ed;border-radius:3px;text-align:center;font-size:10px;padding:7px 0;color:#fff;font-weight:700}.rg-slots span:nth-child(5){background:#2839a6}
+.rg-ranking-entry{position:absolute;right:14px;top:18px;z-index:3;border:1px solid #ffdc6d;border-radius:8px;background:#19283f;color:#ffe16b;display:flex;align-items:center;gap:6px;padding:8px 10px;box-shadow:0 4px 12px #0006;font-size:11px;font-weight:700;min-height:44px}.rg-ranking-entry>span{font-size:19px}
+.rg-bet-controls{margin:12px;background:#191f2b;border-radius:8px;padding:12px;display:grid;gap:12px}.rg-bet-controls label{display:grid;gap:7px;color:#a7b7cd;font-size:12px}.rg-bet-controls input,.rg-bet-controls select{width:100%;min-height:42px;padding:10px;border:1px solid #34445b;border-radius:6px;background:#0f151f;color:#fff;font:inherit}.rg-drop-button{width:100%;min-height:44px;background:#08b8f1;border:0;border-radius:5px;font-size:14px;font-weight:700;color:#fff}.rg-drop-button:disabled{opacity:.6;cursor:wait}.rg-control-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.rg-game-result{min-height:18px;color:#f5d67d;font-size:12px;margin:0}
+.rg-game-meta{padding:2px 16px 22px;color:#9cabc2;font-size:11px;line-height:1.7}.rg-game-meta strong{font-size:16px;color:#fff}.rg-game-meta p{margin:4px 0}.rg-game-meta .rg-wager{color:#53d5ff}
+.rg-preview-shade{position:fixed;inset:0;z-index:70;display:flex;justify-content:center;align-items:center;padding:20px;isolation:isolate}.rg-preview-shade:before{content:'';position:absolute;inset:0;background:#0007;z-index:-1}
+.rg-preview{width:min(340px,100%);max-height:calc(100dvh - 40px);overflow:auto;border:1px solid #34455e;border-radius:10px;background:#191f2b;padding:14px;box-shadow:0 12px 40px #0008}
+.rg-preview-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.rg-preview-heading h2{font-size:15px;margin:0}.rg-preview-close{border:0;background:none;color:#aebed0;font-size:24px;min-width:36px;min-height:36px}
+.rg-preview-pool{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#284773,#192439);padding:14px 12px;border-radius:6px;margin-bottom:12px}.rg-preview-pool small{font-size:10px;color:#d6e9ff}.rg-preview-pool strong{display:block;color:#ffd34b;font-size:26px;margin-top:5px;letter-spacing:-.5px}.rg-preview-clock{border-top:3px solid #ffd34b;border-radius:50%;padding:16px 6px 5px;text-align:center;min-width:78px}.rg-preview-clock span{display:block;font-size:9px;color:#aabbcf}.rg-preview-clock b{font-size:11px;font-variant-numeric:tabular-nums}
+.rg-preview-table{width:100%;border-collapse:collapse;font-size:11px;background:#101722;border-radius:5px;overflow:hidden}.rg-preview-table th{font-weight:500;color:#99aac2;padding:10px 6px}.rg-preview-table td{padding:10px 6px;border-top:1px solid #253044;font-weight:700}.rg-preview-table th:first-child,.rg-preview-table td:first-child{text-align:left}.rg-preview-table th:not(:first-child),.rg-preview-table td:not(:first-child){text-align:right}.rg-preview-table tbody tr:last-child{color:#24c9ff}
+.rg-preview-tip{font-size:11px;line-height:1.6;color:#aabbd0;margin:12px 0}.rg-preview-tip strong{color:#ffd34b}.rg-preview-open{display:block;width:100%;min-height:42px;border:0;border-radius:5px;background:#08b8f1;color:#fff;font-weight:700;font-size:12px}
+@keyframes rg-drop{0%{transform:translate(0,0)}20%{transform:translate(-15px,58px)}40%{transform:translate(15px,116px)}60%{transform:translate(-30px,174px)}80%{transform:translate(0,232px)}100%{transform:translate(30px,285px)}}
+@media(max-width:350px){.rg-preview{padding:10px}.rg-preview-pool strong{font-size:23px}.rg-page .rk-brand{gap:8px;padding:0 12px}.rg-page .rk-login{font-size:10px;padding:9px}.rg-slots span{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.rg-ball.is-dropping{animation:none;transform:translate(30px,285px)}}
+
+</style>
+<script id="ranking-game-update">
+(()=>{
+  const originalRender=render,originalHandler=handler;
+  const game={name:'Plinko',amount:1,risk:'Low',rows:'13',wagered:0,turn:0,dropping:false,preview:false,returnPage:'home'};
+  const deadline=Date.now()+3*60*60*1000+3*60*1000;
+  const money=value=>'₹'+Number(value).toLocaleString('en-US',{maximumFractionDigits:2});
+  function brand(){const template=document.createElement('template');template.innerHTML=GogoRanking.page();return template.content.querySelector('.rk-brand').outerHTML;}
+  function board(){return `<svg class="rg-board" viewBox="0 0 390 340" role="img" aria-label="Plinko demo board"><g class="rg-pegs">${Array.from({length:13},(_,row)=>Array.from({length:row+3},(_,column)=>`<circle cx="${195+(column-(row+2)/2)*22}" cy="${32+row*22}" r="2.4"/>`).join('')).join('')}</g><circle class="rg-ball ${game.dropping?'is-dropping':''}" cx="195" cy="12" r="5"/></svg><div class="rg-slots" aria-label="Demo multipliers">${['5.6','3.0','1.5','1.0','0.5','1.0','1.5','3.0','5.6'].map(value=>`<span>${value}×</span>`).join('')}</div>`;}
+  function preview(){return `<div class="rg-preview-shade"><section class="rg-preview" role="dialog" aria-modal="true" aria-labelledby="rg-preview-title"><header class="rg-preview-heading"><h2 id="rg-preview-title">Daily Race</h2><button type="button" class="rg-preview-close" data-action="ranking-game:preview-close" aria-label="Close ranking preview">×</button></header><div class="rg-preview-pool"><div><small>PRIZE POOL</small><strong>₹360,360.00</strong></div><div class="rg-preview-clock"><span>Ends in</span><b data-game-rank-clock></b></div></div><table class="rg-preview-table"><thead><tr><th>Rank</th><th>Wagered</th><th>Prize</th></tr></thead><tbody><tr><td>500th</td><td>₹10,218.49</td><td>₹240</td></tr><tr><td>${game.wagered>=10218.49?'499th':'Unranked'}</td><td>${money(game.wagered)}</td><td>${game.wagered>=10218.49?'₹240':'₹0'}</td></tr></tbody></table><p class="rg-preview-tip">${game.wagered>=10218.49?'You have reached the demo qualifying wager.':`Bet <strong>${money(Math.max(0,10218.49-game.wagered))}</strong> more to reach the top 500.`}<br>Top 500 players share the prize pool.</p><button type="button" class="rg-preview-open" data-action="ranking-game:open">View full leaderboard ›</button></section></div>`;}
+  function page(){return `<section class="rg-page" aria-label="Game demo">${brand()}<div class="rg-top"><button type="button" data-action="ranking-game:back" aria-label="Back to games">‹</button><strong>${escapeHtml(game.name)}</strong></div><section class="rg-stage" aria-label="Plinko game area">${board()}<button type="button" class="rg-ranking-entry" data-action="ranking-game:preview" aria-haspopup="dialog" aria-expanded="${game.preview}"><span aria-hidden="true">🏆</span>Ranking</button></section><section class="rg-bet-controls" aria-label="Demo game controls"><button type="button" class="rg-drop-button" data-action="ranking-game:drop" ${game.dropping?'disabled':''}>${game.dropping?'Dropping…':'Drop ball · Demo'}</button><label>Bet amount (demo)<input data-game-setting="amount" type="number" min="1" max="10000" step="1" value="${game.amount}" inputmode="decimal"></label><div class="rg-control-pair"><label>Difficulty<select data-game-setting="risk">${['Low','Medium','High'].map(value=>`<option ${value===game.risk?'selected':''}>${value}</option>`).join('')}</select></label><label>Rows<select data-game-setting="rows">${['8','13','16'].map(value=>`<option ${value===game.rows?'selected':''}>${value}</option>`).join('')}</select></label></div><p class="rg-game-result" role="status">${game.turn?`Demo round ${game.turn} · Total wagered ${money(game.wagered)}`:'Try a demo round, or tap Ranking to see the race.'}</p></section><footer class="rg-game-meta"><strong>${escapeHtml(game.name)}</strong><p>Originals · Free demo</p><p class="rg-wager">My demo wagered: ${money(game.wagered)}</p><p>Simulated game and leaderboard preview only. No real bets, payments or prizes.</p></footer></section>`;}
+  function tick(){const clock=document.querySelector('[data-game-rank-clock]');if(clock){const remaining=Math.max(0,Math.floor((deadline-Date.now())/1000));clock.textContent=[Math.floor(remaining/3600),Math.floor(remaining%3600/60),remaining%60].map(value=>String(value).padStart(2,'0')).join(':');}}
+  function closePreview(){game.preview=false;render();document.querySelector('[data-action="ranking-game:preview"]')?.focus({preventScroll:true});}
+  render=function(){
+    document.body.classList.toggle('ranking-game-mode',state.page==='ranking-game');
+    if(state.page!=='ranking-game'){originalRender();return;}
+    app.innerHTML=`<div ${game.preview?'inert':''}>${page()}</div>${game.preview?preview():''}`;
+    document.body.classList.remove('ranking-mode','profile-mode');document.body.style.overflow=game.preview?'hidden':'';tick();
+  };
+  handler=function(action){
+    if(action.startsWith('game:')){
+      const previous=state.page;
+      if(GogoRanking.onGame(action))GogoRanking.handle('ranking:close');
+      game.returnPage=previous==='detail'?'detail':'home';game.name='Plinko';game.preview=false;
+      state.drawer=false;state.modal='';changePage('ranking-game');return;
+    }
+    if(!action.startsWith('ranking-game:')){originalHandler(action);return;}
+    if(action==='ranking-game:back'){game.preview=false;changePage(game.returnPage);}
+    else if(action==='ranking-game:preview'){game.preview=true;render();document.querySelector('.rg-preview-close')?.focus({preventScroll:true});}
+    else if(action==='ranking-game:preview-close')closePreview();
+    else if(action==='ranking-game:open'){game.preview=false;GogoRanking.open();}
+    else if(action==='ranking-game:drop'&&!game.dropping){
+      const input=document.querySelector('[data-game-setting="amount"]');
+      if(!input?.reportValidity())return;
+      game.amount=Number(input.value);game.wagered=Math.round((game.wagered+game.amount)*100)/100;game.turn++;game.dropping=true;render();
+      setTimeout(()=>{game.dropping=false;if(state.page==='ranking-game'){const button=document.querySelector('.rg-drop-button');button.disabled=false;button.textContent='Drop ball · Demo';document.querySelector('.rg-ball')?.classList.remove('is-dropping');}},750);
+    }
+  };
+  document.addEventListener('change',event=>{const setting=event.target.dataset.gameSetting;if(setting&&setting!=='amount'&&Object.hasOwn(game,setting))game[setting]=event.target.value;});
+  document.addEventListener('keydown',event=>{
+    if(state.page!=='ranking-game'||!game.preview)return;
+    if(event.key==='Escape'){event.preventDefault();closePreview();}
+    if(event.key==='Tab'){const buttons=[...document.querySelectorAll('.rg-preview button')],first=buttons[0],last=buttons.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+  });
+  document.addEventListener('click',event=>{if(event.target.matches('.rg-preview-shade'))closePreview();});
+  setInterval(tick,1000);
 })();
 
 </script>
